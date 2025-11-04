@@ -1,3 +1,4 @@
+{% raw %}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -42,11 +43,11 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: ENDPOINTS_HEROES
-              value: http://dev{{ teamid }}-hero-{{ .Values.environment }}:8080/api/heroes/random
+              value: http://dev{% endraw %}{{ teamid }}{% raw %}-hero-{{ .Values.environment }}:8080/api/heroes/random
             - name: ENDPOINTS_VILLAINS
-              value: http://dev{{ teamid }}-villain-{{ .Values.environment }}:8080/api/villains/random
+              value: http://dev{% endraw %}{{ teamid }}{% raw %}-villain-{{ .Values.environment }}:8080/api/villains/random
             - name: ENDPOINTS_FIGHT
-              value: http://dev{{ teamid }}-fight-{{ .Values.environment }}:8080/api/fights
+              value: http://dev{% endraw %}{{ teamid }}{% raw %}-fight-{{ .Values.environment }}:8080/api/fights
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -81,3 +82,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{% endraw %}
