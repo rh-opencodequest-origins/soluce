@@ -1,3 +1,4 @@
+{% raw %}
 {{/*
 Expand the name of the chart.
 */}}
@@ -34,11 +35,11 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "backstage.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-fight-ui
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-fight-ui
 {{- end }}
 
 {{- define "fight-ui.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-fight-ui
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-fight-ui
 helm.sh/chart: {{ include "fight-ui.chart" . }}
 {{ include "fight-ui.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
@@ -65,3 +66,4 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+{% endraw %}

@@ -1,3 +1,4 @@
+{% raw %}
 {{/*
 Expand the name of the chart.
 */}}
@@ -29,11 +30,11 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "backstage.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-hero
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-hero
 {{- end }}
 
 {{- define "quarkus-template.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-hero
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-hero
 helm.sh/chart: {{ include "quarkus-template.chart" . }}
 app.openshift.io/runtime: quarkus
 {{ include "quarkus-template.selectorLabels" . }}
@@ -44,7 +45,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{- define "quarkus-template-database.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-hero
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-hero
 helm.sh/chart: {{ include "quarkus-template.chart" . }}
 app.openshift.io/runtime: postgresql
 {{- if .Chart.AppVersion }}
@@ -94,3 +95,4 @@ Generate database password - reuses existing or creates new
 {{- printf "%s-%s" .Release.Namespace .Release.Name | sha256sum -}}
 {{- end -}}
 {{- end -}}
+{% endraw %}

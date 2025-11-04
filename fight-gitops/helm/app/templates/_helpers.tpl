@@ -1,3 +1,4 @@
+{% raw %}
 {{/*
 Expand the name of the chart.
 */}}
@@ -29,11 +30,11 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "backstage.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-fight
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-fight
 {{- end }}
 
 {{- define "quarkus-template.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-fight
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-fight
 helm.sh/chart: {{ include "quarkus-template.chart" . }}
 app.openshift.io/runtime: quarkus
 {{ include "quarkus-template.selectorLabels" . }}
@@ -44,7 +45,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{- define "quarkus-template-database.labels" -}}
-backstage.io/kubernetes-id: dev{{ teamid }}-fight
+backstage.io/kubernetes-id: dev{% endraw %}{{ teamid }}{% raw %}-fight
 helm.sh/chart: {{ include "quarkus-template.chart" . }}
 app.openshift.io/runtime: postgresql
 {{- if .Chart.AppVersion }}
@@ -80,3 +81,4 @@ Create the name of the service account to use
 {{- printf "%s/%s/%s:latest" .Values.image.host .Values.namespace.name .Values.image.name -}}
 {{- end }}
 {{- end }}
+{% endraw %}
