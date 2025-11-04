@@ -1,3 +1,4 @@
+{%raw %}
 {{- if not (eq .Values.environment "dev") -}}
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -17,12 +18,13 @@ roleRef:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: dev{{ teamid }}-{{ .Values.namespace.name }}
+  name: dev{% endraw %}{{ teamid }}{% raw %}-{{ .Values.namespace.name }}
 subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: Group
-    name: dev{{ teamid }}
+    name: dev{% endraw %}{{ teamid }}{% raw %}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: edit
+{% endraw %}

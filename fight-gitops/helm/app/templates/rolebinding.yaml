@@ -1,12 +1,13 @@
+{%raw %}
 {{- if not (eq .Values.environment "dev") -}}
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: dev{{ teamid }}-fight-pusher-edit
+  name: dev{% endraw %}{{ teamid }}{% raw %}-fight-pusher-edit
   namespace: "{{ .Values.namespace.name }}"
 subjects:
   - kind: ServiceAccount
-    name: dev{{ teamid }}-fight-image-pusher
+    name: dev{% endraw %}{{ teamid }}{% raw %}-fight-image-pusher
     namespace: fight-dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -17,13 +18,14 @@ roleRef:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-#  name: dev{{ teamid }}-{{ .Values.namespace.name }}
+#  name: dev{% endraw %}{{ teamid }}{% raw %}-{{ .Values.namespace.name }}
   name: fight-edit
 subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: Group
-    name: dev{{ teamid }}
+    name: dev{% endraw %}{{ teamid }}{% raw %}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: edit
+{% endraw %}
