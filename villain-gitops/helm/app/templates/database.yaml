@@ -1,0 +1,163 @@
+{{- if not (eq .Values.environment "prod") -}}
+{{- $dbPassword := include "quarkus-template.databasePassword" . -}}
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: villain-database-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+type: Opaque
+stringData:
+  POSTGRESQL_USER: villain
+  POSTGRESQL_PASSWORD: {{ $dbPassword | quote }}
+  POSTGRESQL_DATABASE: villaindb
+  username: villain
+  password: {{ $dbPassword | quote }}
+  dbname: villaindb
+  jdbc-uri: jdbc:postgresql://villain-database:5432/villaindb?password={{ $dbPassword }}&user=villain
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: villain-database-init-job
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: init-database
+        image: registry.redhat.io/rhel9/postgresql-16
+        command: 
+        - sh 
+        - -c 
+        - |
+            PGPASSWORD=$POSTGRESQL_PASSWORD psql -h villain-database -U $POSTGRESQL_USER -d $POSTGRESQL_DATABASE -f /scripts/import.sql
+        envFrom:
+        - secretRef:
+            name: villain-database-app
+        volumeMounts:
+        - name: init-script
+          mountPath: /scripts
+      volumes:
+      - name: init-script
+        configMap:
+          name: villain-importsql
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: villain-database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: villain-database
+  labels:
+    app: villain-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: villain-database
+  template:
+    metadata:
+      labels:
+        app: villain-database
+    spec:
+      containers:
+      - name: villaindb
+        image: registry.redhat.io/rhel9/postgresql-16
+        ports:
+        - containerPort: 5432
+          name: postgres
+        envFrom:
+        - secretRef:
+            name: villain-database-app
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "400m"
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - postgres
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: villain-database
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: villain-database
+  labels:
+    app: villain-database
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+    name: postgres
+  selector:
+    app: villain-database
+
+---
+
+{{- else }}
+kind: Secret
+apiVersion: v1
+metadata:
+  name: villain-database-app
+  labels:
+    {{- include "backstage.labels" . | nindent 4 }}
+    {{- include "quarkus-template-database.labels" . | nindent 4 }}
+stringData:
+  port: '5432'
+  dbname: villain
+  username: app_user
+  password: 'DevZone2024#'
+  jdbc-uri: 'jdbc:postgresql://cluster-edb-prod-rw.edb-database-prod:5432/villain?password=DevZone2024#&user=app_user'
+type: kubernetes.io/basic-auth
+{{- end }}

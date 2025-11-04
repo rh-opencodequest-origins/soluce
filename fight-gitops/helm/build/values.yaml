@@ -1,0 +1,26 @@
+app:
+  # name: fight
+  name: dev{{ teamid }}-fight
+  namespace: dev{{ teamid }}-workshop-dev
+  cluster: .{{ ocpdomain }}
+
+stackrox:
+  endpoint: central-stackrox.apps.cluster-8sprz.8sprz.sandbox2184.opentlc.com:443
+
+git:
+  branch: main
+  repo: https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/fight.git
+  org: dev{{ teamid }}
+  name: fight
+  host: gitlab-gitlab.{{ ocpdomain }}
+  token: ''
+  webhookSecret: ''
+  verify_commits: disabled
+
+
+image:
+  registry: Quay
+  organization: gotham
+  host: quay.apps.cluster-8sprz.8sprz.sandbox2184.opentlc.com
+  name: dev{{ teamid }}-fight
+  tag: latest

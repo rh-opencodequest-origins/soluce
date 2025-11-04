@@ -1,0 +1,44 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dev{{ teamid }}-fight
+  description: "My super fight service"
+  annotations:
+    argocd/app-selector: argocd.argoproj.io/instance=dev{{ teamid }}-fight-bootstrap
+    backstage.io/kubernetes-id: dev{{ teamid }}-fight
+    janus-idp.io/tekton: dev{{ teamid }}-fight
+    backstage.io/source-location: url:https://gitlab-gitlab.ø/dev{{ teamid }}/fight
+    backstage.io/techdocs-ref: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/fight
+    gitlab.com/project-slug: dev{{ teamid }}/fight
+    quay.io/repository-slug: "gotham/dev{{ teamid }}-fight"
+    sonarqube.org/project-key: dev{{ teamid }}-fight
+  tags:
+    - java
+    - quarkus
+  links:
+    - url: https://devspaces.{{ ocpdomain }}/#https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/fight
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+    - url: https://console-openshift-console.{{ ocpdomain }}/topology/ns/dev{{ teamid }}-workshop-dev?view=graph
+      title: Console OpenShift
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: dev{{ teamid }}
+  providesApis:
+    - dev{{ teamid }}-fight
+  system: system:default/opencodequest-pe{{ teamid }}
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: dev{{ teamid }}-fight
+  description: "My super fight service"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "dev{{ teamid }}"
+  definition:
+    $text: ./openapi.yaml
+

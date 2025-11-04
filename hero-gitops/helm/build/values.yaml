@@ -1,0 +1,27 @@
+app:
+  # name: hero
+  name: dev{{ teamid }}-hero
+#  name: hero
+  namespace: dev{{ teamid }}-workshop-dev
+  cluster: .{{ ocpdomain }}
+
+stackrox:
+  endpoint: central-stackrox.apps.cluster-8sprz.8sprz.sandbox2184.opentlc.com:443
+
+git:
+  branch: main
+  repo: https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/hero.git
+  org: dev{{ teamid }}
+  name: hero
+  host: gitlab-gitlab.{{ ocpdomain }}
+  token: ''
+  webhookSecret: ''
+  verify_commits: disabled
+
+
+image:
+  registry: Quay
+  organization: gotham
+  host: quay.apps.cluster-8sprz.8sprz.sandbox2184.opentlc.com
+  name: dev{{ teamid }}-hero
+  tag: latest

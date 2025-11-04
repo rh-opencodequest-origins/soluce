@@ -1,0 +1,44 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dev{{ teamid }}-hero
+  description: "My super heroes service"
+  annotations:
+    argocd/app-selector: argocd.argoproj.io/instance=dev{{ teamid }}-hero-bootstrap
+    backstage.io/kubernetes-id: dev{{ teamid }}-hero
+    janus-idp.io/tekton: dev{{ teamid }}-hero
+    backstage.io/source-location: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/hero
+    backstage.io/techdocs-ref: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/hero
+    gitlab.com/project-slug: dev{{ teamid }}/hero
+    quay.io/repository-slug: "gotham/dev{{ teamid }}-hero"
+    sonarqube.org/project-key: dev{{ teamid }}-hero
+  tags:
+    - java
+    - quarkus
+  links:
+    - url: https://devspaces.{{ ocpdomain }}/#https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/hero
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+    - url: https://console-openshift-console.{{ ocpdomain }}/topology/ns/dev{{ teamid }}-workshop-dev?view=graph
+      title: Console OpenShift
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: dev{{ teamid }}
+  providesApis:
+    - dev{{ teamid }}-hero
+  system: system:default/opencodequest-pe{{ teamid }}
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: dev{{ teamid }}-hero
+  description: "My super heroes service"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "dev{{ teamid }}"
+  definition:
+    $text: ./openapi.yaml
+

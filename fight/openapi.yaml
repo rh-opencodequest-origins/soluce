@@ -1,0 +1,71 @@
+---
+openapi: 3.1.0
+components:
+  schemas:
+    Fight:
+      type: object
+      properties:
+        hero:
+          $ref: "#/components/schemas/Hero"
+        villain:
+          $ref: "#/components/schemas/Villain"
+    FightResult:
+      type: object
+      properties:
+        winner:
+          type: string
+        narration:
+          type: string
+    Hero:
+      type: object
+      properties:
+        name:
+          type: string
+        level:
+          type: integer
+          format: int32
+        powers:
+          type: array
+          items:
+            type: string
+    Villain:
+      type: object
+      properties:
+        name:
+          type: string
+        level:
+          type: integer
+          format: int32
+        powers:
+          type: array
+          items:
+            type: string
+paths:
+  /api/fights:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Fight"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FightResult"
+        "400":
+          description: Bad Request
+      summary: Fight
+      tags:
+      - Fight Resource
+info:
+  title: fight-service API
+  version: 1.0.0-SNAPSHOT
+servers:
+- url: http://localhost:8080
+  description: Auto generated value
+- url: http://0.0.0.0:8080
+  description: Auto generated value

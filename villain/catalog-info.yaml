@@ -1,0 +1,44 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dev{{ teamid }}-villain
+  description: "My super villain service"
+  annotations:
+    argocd/app-selector: argocd.argoproj.io/instance=dev{{ teamid }}-villain-bootstrap
+    backstage.io/kubernetes-id: dev{{ teamid }}-villain
+    janus-idp.io/tekton: dev{{ teamid }}-villain
+    backstage.io/source-location: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/villain
+    backstage.io/techdocs-ref: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/villain
+    gitlab.com/project-slug: dev{{ teamid }}/villain
+    quay.io/repository-slug: "gotham/dev{{ teamid }}-villain"
+    sonarqube.org/project-key: dev{{ teamid }}-villain
+  tags:
+    - java
+    - quarkus
+  links:
+    - url: https://devspaces.{{ ocpdomain }}/#https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/villain
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+    - url: https://console-openshift-console.{{ ocpdomain }}/topology/ns/dev{{ teamid }}-workshop-dev?view=graph
+      title: Console OpenShift
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: dev{{ teamid }}
+  providesApis:
+    - dev{{ teamid }}-villain
+  system: system:default/opencodequest-pe{{ teamid }}
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: dev{{ teamid }}-villain
+  description: "My super villain service"
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "dev{{ teamid }}"
+  definition:
+    $text: ./openapi.yaml
+

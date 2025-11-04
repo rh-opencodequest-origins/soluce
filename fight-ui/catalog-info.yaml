@@ -1,0 +1,26 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dev{{ teamid }}-fight-ui
+  annotations:
+    argocd/app-selector: argocd.argoproj.io/instance=dev{{ teamid }}-fight-ui-bootstrap
+    backstage.io/kubernetes-id: dev{{ teamid }}-fight-ui
+    backstage.io/source-location: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/fight-ui
+    backstage.io/techdocs-ref: url:https://gitlab-gitlab.{{ ocpdomain }}/dev{{ teamid }}/fight-ui
+    gitlab.com/project-slug: dev{{ teamid }}/fight-ui
+  tags:
+    - java
+    - quarkus
+  links:
+    - url: https://console-openshift-console/topology/ns/dev{{ teamid }}-workshop-dev?view=graph
+      title: Console OpenShift
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: dev{{ teamid }}
+  consumesApis:
+    - dev{{ teamid }}-hero
+    - dev{{ teamid }}-villain
+    - dev{{ teamid }}-fight
+  system: system:default/opencodequest-pe{{ teamid }}
